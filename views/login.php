@@ -97,7 +97,7 @@ if (isset($_SESSION['logged_in'])) {
                             </div>
                         </form>
                         <div class="mt-12 text-sm font-display font-semibold text-gray-700 text-center">
-                            Don't have an account ? <a href="/intrapanel/views/register.html" class="cursor-pointer text-indigo-600 hover:text-indigo-800">Sign
+                            Don't have an account ? <a href="/intrapanel/views/register.php" class="cursor-pointer text-indigo-600 hover:text-indigo-800">Sign
                                 up</a>
                         </div>
                     </div>

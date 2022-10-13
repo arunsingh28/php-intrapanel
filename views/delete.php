@@ -5,6 +5,13 @@ include_once('../includes/article.php');
 
 $article = new Article;
 if (isset($_SESSION['logged_in'])) {
+    if (isset($_GET['id'])) {
+        $id = $_GET['id'];
+        $query = $pdo->prepare('DELETE FROM articles WHERE article_id = ?');
+        $query->bindValue(1, $id);
+        $query->execute();
+        $success = "Article Deleted Successfully";
+    }
     $articles = $article->fetch_all();
 
 ?>
@@ -12,6 +19,7 @@ if (isset($_SESSION['logged_in'])) {
 
     <head>
         <title>Delete Article</title>
+        <link rel="stylesheet" href="../intrapanel/assets/style.css">
         <script src="https://cdn.tailwindcss.com"></script>
     </head>
 
@@ -72,29 +80,87 @@ if (isset($_SESSION['logged_in'])) {
                 </nav>
             </header>
         </div>
-        <div class="container">
-            <a href="index.php" id="logo">CMS</a>
-            <br />
-            <h4>Select an Article to Delete:</h4>
-            <form action="delete.php" method="get">
-                <select onchange="this.form.submit();" name="id">
-                    <?php
-                    $query = $pdo->prepare("SELECT * FROM articles");
-                    $query->execute();
-                    foreach ($query->fetchAll() as $article) {
-                    ?>
-                        <option value="<?php echo $article['article_id']; ?>">
-                            <?php echo $article['article_title']; ?>
-                        </option>
-                    <?php
-                    }
-                    ?>
-                </select>
-            </form>
-            <br />
-            <small><a href="/intrapanel">&larr; Back</a></small>
-            <br />
-            <small><a href="logout.php">Logout</a></small>
+        <div class="container mx-auto">
+            <style>
+                select {
+                    -webkit-appearance: none;
+                    -moz-appearance: none;
+                    -ms-appearance: none;
+                    appearance: none;
+                    outline: 0;
+                    box-shadow: none;
+                    border: 0 !important;
+                    background: #c084fc;
+                    background-image: none;
+                    width: 100%;
+                    height: 40px;
+                    padding: 0 .5em;
+                    border-radius: 10px;
+                    color: #fff;
+                    cursor: pointer;
+                    font-size: 1em;
+                    font-family: 'Open Sans', sans-serif;
+                }
+
+                select::-ms-expand {
+                    display: none;
+                }
+
+                .select {
+                    position: relative;
+                    display: flex;
+                    width: 20em;
+                    height: 3em;
+                    line-height: 3;
+                    background: #5c6664;
+                    overflow: hidden;
+                    border-radius: .25em;
+                }
+
+                .select::after {
+                    content: '\25BC';
+                    position: absolute;
+                    top: 0;
+                    right: 0;
+                    padding: 0 1em;
+                    background: #2b2e2e;
+                    cursor: pointer;
+                    pointer-events: none;
+                    transition: .25s all ease;
+                }
+
+                .select:hover::after {
+                    color: #23b499;
+                }
+            </style>
+            <section class="text-gray-600 body-font relative">
+                <div class="container px-5 py-24 mx-auto">
+                    <div class="flex flex-col text-center w-full mb-12">
+                        <h1 class="sm:text-3xl text-2xl font-medium title-font mb-4 text-gray-900">Select an Article to Delete</h1>
+                    </div>
+                    <?php if (isset($success)) { ?>
+                        <div class="text-green-600 p-3 bg-green-200 w-1/2 mx-auto rounded-md mb-2"><?php echo $success; ?></div>
+                    <?php } ?>
+                    <div class="lg:w-1/2 md:w-2/3 mx-auto">
+                        <form action="delete.php" method="get">
+                            <label for="id" class="font-bold">Article Name</label>
+                            <select onchange="this.form.submit();" name="id">
+                                <?php
+                                $query = $pdo->prepare("SELECT * FROM articles");
+                                $query->execute();
+                                foreach ($query->fetchAll() as $article) {
+                                ?>
+                                    <option value="<?php echo $article['article_id']; ?>">
+                                        <?php echo $article['article_title']; ?>
+                                    </option>
+                                <?php
+                                }
+                                ?>
+                            </select>
+                        </form>
+                    </div>
+                </div>
+            </section>
         </div>
     </body>
 
